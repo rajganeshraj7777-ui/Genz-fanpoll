@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demon Slayer Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: red;
+  text-align: center;
+  padding: 20px;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 300px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #1a1a1a;
+  width: 230px;
+  border-radius: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+button {
+  background: red;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* comment */
+.commentBox {
+  background: #1a1a1a;
+  width: 80%;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 95%;
+  padding: 10px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+.singleComment {
+  background: #222;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* footer */
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🔥 Demon Slayer Fan Poll 🔥</h1>
+</header>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message" style="text-align:center;color:lightgreen;"></p>
+
+<div class="container" id="characters"></div>
+
+<!-- COMMENT -->
+<div class="commentBox">
+<h2 style="text-align:center;">💬 Comments</h2>
+
+<input id="name" placeholder="Name">
+<textarea id="comment" placeholder="Comment"></textarea>
+<button onclick="addComment()">Post</button>
+
+<div id="commentList"></div>
+</div>
+
+<footer>
+Demon Slayer Fan Poll <br><br>
+
+⚠️ Disclaimer: This is a fan-made website for educational and entertainment purposes only.  
+All characters, images, anime content belong to their respective owners.  
+No copyright infringement intended.
+</footer>
+
+<script>
+const characters = [
+  {n:"Tanjiro Kamado",i:"01.html"},
+  {n:"Nezuko Kamado",i:"02.html"},
+  {n:"Zenitsu Agatsuma",i:"03.html"},
+  {n:"Inosuke Hashibira",i:"04.html"},
+  {n:"Rengoku",i:"06.html"},
+  {n:"Giyu",i:"05.html"},
+  {n:"Shinobu",i:"07.html"},
+  {n:"Mitsuri",i:"08.html"},
+  {n:"Obanai",i:"09.html"},
+  {n:"Sanemi",i:"10.html"},
+  {n:"Gyomei",i:"12.html"},
+  {n:"Muichiro",i:"11.html"},
+  {n:"Tengen",i:"13.html"},
+  {n:"Akaza",i:"14.html"},
+  {n:"Doma",i:"15.html"},
+  {n:"Kokushibo",i:"16.html"},
+  {n:"Muzan",i:"17.html"},
+  {n:"Kanao",i:"18.html"},
+  {n:"Genya",i:"19.html"},
+  {n:"Sabito",i:"20.html"}
+];
+
+let votes = JSON.parse(localStorage.getItem("votes")) || {};
+characters.forEach(c=>votes[c.n]=votes[c.n]||0);
+
+let hasVoted = localStorage.getItem("hasVoted");
+
+function render(){
+let html="";
+characters.forEach(c=>{
+html+=`
+<div class="card">
+<img src="${c.i}">
+<h3>${c.n}</h3>
+<p>Votes: <span id="${c.n}v">${votes[c.n]}</span></p>
+<button onclick="vote('${c.n}')">Vote</button>
+</div>`;
+});
+document.getElementById("characters").innerHTML=html;
+updateTotal();
+}
+
+function vote(name){
+if(hasVoted==="true"){
+document.getElementById("message").innerText="❌ Already voted!";
+return;
+}
+
+votes[name]++;
+localStorage.setItem("votes",JSON.stringify(votes));
+localStorage.setItem("hasVoted","true");
+hasVoted="true";
+
+document.getElementById(name+"v").innerText=votes[name];
+document.getElementById("message").innerText="✅ Vote submitted!";
+updateTotal();
+}
+
+function updateTotal(){
+let t=0;
+for(let k in votes)t+=votes[k];
+document.getElementById("totalVotes").innerText=t;
+}
+
+/* comments */
+let comments = JSON.parse(localStorage.getItem("comments")) || [];
+
+function addComment(){
+let n=document.getElementById("name").value;
+let c=document.getElementById("comment").value;
+
+comments.push({n,c});
+localStorage.setItem("comments",JSON.stringify(comments));
+
+document.getElementById("name").value="";
+document.getElementById("comment").value="";
+
+showComments();
+}
+
+function showComments(){
+let html="";
+comments.forEach(x=>{
+html+=`<div class="singleComment"><b>${x.n}</b><p>${x.c}</p></div>`;
+});
+document.getElementById("commentList").innerHTML=html;
+}
+
+render();
+showComments();
+
+if(hasVoted==="true"){
+document.getElementById("message").innerText="⚠️ Already voted";
+}
+
+</script>
+
+</body>
+</html>
