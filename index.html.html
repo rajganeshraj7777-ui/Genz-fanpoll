@@ -19,6 +19,10 @@ header {
   padding: 20px;
 }
 
+header h1 {
+  margin: 0;
+}
+
 .warning {
   text-align: center;
   background: #222;
@@ -69,6 +73,10 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background: darkred;
+}
+
 /* comment */
 .commentBox {
   background: #1a1a1a;
@@ -101,6 +109,30 @@ footer {
   font-size: 13px;
   color: #ccc;
 }
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .totalVotes {
+    width: 90%;
+  }
+
+  .warning {
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  .card {
+    width: 90%;
+  }
+
+  .commentBox {
+    width: 90%;
+  }
+
+  input, textarea {
+    width: 90%;
+  }
+}
 </style>
 </head>
 
@@ -108,6 +140,7 @@ footer {
 
 <header>
 <h1>🔥 Demon Slayer Fan Poll 🔥</h1>
+<p>Vote your favourite character (Only One Vote Allowed)</p>
 </header>
 
 <div class="warning">
@@ -122,6 +155,11 @@ Total Votes: <span id="totalVotes">0</span>
 
 <div class="container" id="characters"></div>
 
+<!-- Other Anime Poll -->
+<div style="text-align:center; margin:20px; color:lightgreen;">
+💡 Do you want polling for other anime like Naruto, One Piece, Attack on Titan?
+</div>
+
 <!-- COMMENT -->
 <div class="commentBox">
 <h2 style="text-align:center;">💬 Comments</h2>
@@ -134,14 +172,23 @@ Total Votes: <span id="totalVotes">0</span>
 </div>
 
 <footer>
-Demon Slayer Fan Poll <br><br>
+<b>Demon Slayer Fan Poll</b> <br><br>
 
-⚠️ Disclaimer: This is a fan-made website for educational and entertainment purposes only.  
-All characters, images, anime content belong to their respective owners.  
-No copyright infringement intended.
+⚠️ Disclaimer: This is a fan-made website created for educational and entertainment purposes only.  
+All characters, images, anime concepts belong to their respective owners.  
+No copyright infringement intended. <br><br>
+
+🎬 Creator: Koyoharu Gotouge <br>
+📺 Studio: ufotable <br>
+🏢 Publisher: Shueisha <br>
+📡 Distributor: Aniplex <br>
+🎼 Music: Yuki Kajiura & Go Shiina <br><br>
+
+We deeply respect all creators and production companies involved in Demon Slayer.
 </footer>
 
 <script>
+
 const characters = [
   {n:"Tanjiro Kamado",i:"01.html"},
   {n:"Nezuko Kamado",i:"02.html"},
@@ -166,76 +213,82 @@ const characters = [
 ];
 
 let votes = JSON.parse(localStorage.getItem("votes")) || {};
-characters.forEach(c=>votes[c.n]=votes[c.n]||0);
+characters.forEach(c => votes[c.n] = votes[c.n] || 0);
 
 let hasVoted = localStorage.getItem("hasVoted");
 
-function render(){
-let html="";
-characters.forEach(c=>{
-html+=`
-<div class="card">
-<img src="${c.i}">
-<h3>${c.n}</h3>
-<p>Votes: <span id="${c.n}v">${votes[c.n]}</span></p>
-<button onclick="vote('${c.n}')">Vote</button>
-</div>`;
-});
-document.getElementById("characters").innerHTML=html;
-updateTotal();
+function render() {
+  let html = "";
+  characters.forEach(c => {
+    html += `
+      <div class="card">
+        <img src="${c.i}">
+        <h3>${c.n}</h3>
+        <p>Votes: <span id="${c.n}v">${votes[c.n]}</span></p>
+        <button onclick="vote('${c.n}')">Vote</button>
+      </div>
+    `;
+  });
+  document.getElementById("characters").innerHTML = html;
+  updateTotal();
 }
 
-function vote(name){
-if(hasVoted==="true"){
-document.getElementById("message").innerText="❌ Already voted!";
-return;
+function vote(name) {
+  if (hasVoted === "true") {
+    document.getElementById("message").innerText = "❌ You already voted!";
+    return;
+  }
+
+  votes[name]++;
+  localStorage.setItem("votes", JSON.stringify(votes));
+  localStorage.setItem("hasVoted", "true");
+  hasVoted = "true";
+
+  document.getElementById(name + "v").innerText = votes[name];
+  document.getElementById("message").innerText = "✅ Vote submitted!";
+  updateTotal();
 }
 
-votes[name]++;
-localStorage.setItem("votes",JSON.stringify(votes));
-localStorage.setItem("hasVoted","true");
-hasVoted="true";
-
-document.getElementById(name+"v").innerText=votes[name];
-document.getElementById("message").innerText="✅ Vote submitted!";
-updateTotal();
-}
-
-function updateTotal(){
-let t=0;
-for(let k in votes)t+=votes[k];
-document.getElementById("totalVotes").innerText=t;
+function updateTotal() {
+  let total = 0;
+  for (let k in votes) total += votes[k];
+  document.getElementById("totalVotes").innerText = total;
 }
 
 /* comments */
 let comments = JSON.parse(localStorage.getItem("comments")) || [];
 
-function addComment(){
-let n=document.getElementById("name").value;
-let c=document.getElementById("comment").value;
+function addComment() {
+  let n = document.getElementById("name").value;
+  let c = document.getElementById("comment").value;
 
-comments.push({n,c});
-localStorage.setItem("comments",JSON.stringify(comments));
+  if (n === "" || c === "") {
+    alert("Please enter name and comment!");
+    return;
+  }
 
-document.getElementById("name").value="";
-document.getElementById("comment").value="";
+  comments.push({ n, c });
+  localStorage.setItem("comments", JSON.stringify(comments));
 
-showComments();
+  document.getElementById("name").value = "";
+  document.getElementById("comment").value = "";
+
+  showComments();
 }
 
-function showComments(){
-let html="";
-comments.forEach(x=>{
-html+=`<div class="singleComment"><b>${x.n}</b><p>${x.c}</p></div>`;
-});
-document.getElementById("commentList").innerHTML=html;
+function showComments() {
+  let html = "";
+  comments.forEach(x => {
+    html += `<div class="singleComment"><b>${x.n}</b><p>${x.c}</p></div>`;
+  });
+  document.getElementById("commentList").innerHTML = html;
 }
 
 render();
 showComments();
 
-if(hasVoted==="true"){
-document.getElementById("message").innerText="⚠️ Already voted";
+if (hasVoted === "true") {
+  document.getElementById("message").innerText = "⚠️ You already voted. Thank you!";
 }
 
 </script>
