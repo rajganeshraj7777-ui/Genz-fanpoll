@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="qtlaUvA5wKIO-arLSlHDG0njoKxWPyv5jXt7RK7arpM" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demon Slayer Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: green;
+  text-align: center;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 300px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #1a1a1a;
+  width: 230px;
+  border-radius: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+button {
+  background: green;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkred;
+}
+
+.commentBox {
+  background: #1a1a1a;
+  width: 80%;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 95%;
+  padding: 10px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+.singleComment {
+  background: #222;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .totalVotes { width: 90%; }
+  .warning { width: 90%; margin: 10px auto; }
+  .card { width: 90%; }
+  .commentBox { width: 90%; }
+  input, textarea { width: 90%; }
+}
+</style>
+</head>
+
+<body>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue, push, set } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const characters = [
+    {n:"Tanjiro Kamado", i:"01.html"},
+    {n:"Nezuko Kamado", i:"02.html"},
+    {n:"Zenitsu Agatsuma", i:"03.html"},
+    {n:"Inosuke Hashibira", i:"04.html"},
+    {n:"Giyu", i:"05.html"},
+    {n:"Rengoku", i:"06.html"},
+    {n:"Shinobu", i:"07.html"},
+    {n:"Mitsuri", i:"08.html"},
+    {n:"Obanai", i:"09.html"},
+    {n:"Sanemi", i:"10.html"},
+    {n:"Muichiro", i:"11.html"},
+    {n:"Gyomei", i:"12.html"},
+    {n:"Tengen", i:"13.html"},
+    {n:"Akaza", i:"14.html"},
+    {n:"Doma", i:"15.html"},
+    {n:"Kokushibo", i:"16.html"},
+    {n:"Muzan", i:"21.html"},
+    {n:"Kanao", i:"18.html"},
+    {n:"Genya", i:"19.html"},
+    {n:"Sabito", i:"20.html"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData){
+    let html = "";
+    characters.forEach(c => {
+      const key = safeKey(c.n);
+      const count = votesData?.[key] || 0;
+
+      html += `
+        <div class="card">
+          <img src="${c.i}">
+          <h3>${c.n}</h3>
+          <p>Votes: <span id="${key}v">${count}</span></p>
+          <button onclick="castVote('${c.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("characters").innerHTML = html;
+  }
+
+  // Total votes listener
+  onValue(ref(database, "totalVotes"), (snapshot) => {
+    document.getElementById("totalVotes").innerText = snapshot.val() || 0;
+  });
+
+  // Votes listener
+  onValue(ref(database, "votes"), (snapshot) => {
+    const data = snapshot.val() || {};
+    renderVotes(data);
+  });
+
+  // Vote function
+  window.castVote = function(character){
+
+    let hasVoted = localStorage.getItem("hasVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(character);
+
+    const charRef = ref(database, "votes/" + key);
+    const overallRef = ref(database, "totalVotes");
+
+    runTransaction(charRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("hasVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // ------------------- COMMENTS -------------------
+
+  function showComments(commentData){
+    let html = "";
+    if(commentData){
+      const commentArray = Object.values(commentData);
+
+      commentArray.reverse().forEach(x => {
+        html += `
+          <div class="singleComment">
+            <b>${x.name}</b>
+            <p>${x.comment}</p>
+          </div>
+        `;
+      });
+    }
+    document.getElementById("commentList").innerHTML = html;
+  }
+
+  // Live comments listener
+  onValue(ref(database, "comments"), (snapshot) => {
+    showComments(snapshot.val());
+  });
+
+  // Add comment function
+  window.addComment = function(){
+    const name = document.getElementById("name").value.trim();
+    const comment = document.getElementById("comment").value.trim();
+
+    if(name === "" || comment === ""){
+      alert("Please enter name and comment!");
+      return;
+    }
+
+    const newCommentRef = push(ref(database, "comments"));
+
+    set(newCommentRef, {
+      name: name,
+      comment: comment,
+      time: Date.now()
+    });
+
+    document.getElementById("name").value = "";
+    document.getElementById("comment").value = "";
+  };
+
+</script>
+
+<header>
+  <h1>🔥 Demon Slayer Fan Poll 🔥</h1>
+  <p>Vote your favourite character (Only One Vote Allowed)</p>
+</header>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message" style="text-align:center;color:lightgreen;"></p>
+
+<div class="container" id="characters"></div>
+
+<div style="text-align:center; margin:20px; color:lightgreen;">
+💡 Do you want polling for other anime like Naruto, One Piece, Attack on Titan?
+</div>
+
+<div class="commentBox">
+  <h2 style="text-align:center;">💬 Comments</h2>
+
+  <input id="name" placeholder="Name">
+  <textarea id="comment" placeholder="Comment"></textarea>
+  <button onclick="addComment()">Post</button>
+
+  <div id="commentList"></div>
+</div>
+
+<footer>
+<b>Demon Slayer Fan Poll</b> <br><br>
+
+⚠️ Disclaimer: This is a fan-made website created for educational and entertainment purposes only.  
+All characters, images, anime concepts belong to their respective owners.  
+No copyright infringement intended. <br><br>
+🎬 Creator: Koyoharu Gotouge <br>
+📺 Studio: ufotable <br>
+🏢 Publisher: Shueisha <br>
+📡 Distributor: Aniplex <br>
+🎼 Music: Yuki Kajiura & Go Shiina <br><br>
+
+We deeply respect all creators and production companies involved in Demon Slayer.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naruto Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: orange;
+  text-align: center;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: yellow;
+  padding: 12px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 300px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #1a1a1a;
+  width: 230px;
+  border-radius: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+button {
+  background: orange;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkred;
+}
+
+.commentBox {
+  background: #1a1a1a;
+  width: 80%;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 95%;
+  padding: 10px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+.singleComment {
+  background: #222;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .totalVotes { width: 90%; }
+  .warning { width: 90%; margin: 10px auto; }
+  .card { width: 90%; }
+  .commentBox { width: 90%; }
+  input, textarea { width: 90%; }
+}
+</style>
+</head>
+
+<body>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue, push, set } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const characters = [
+    {n:"Naruto Uzumaki", i:"narutoimage2.jpg"},
+    {n:"Sasuke Uchiha", i:"sasukeimage.jpg"},
+    {n:"Sakura Haruno", i:"sakura.jpg"},
+    {n:"Kakashi Hatake", i:"kakashi.jpg"},
+    {n:"Hinata Hyuga", i:"hinata.jpg"},
+    {n:"Itachi Uchiha", i:"itachi.jpg"},
+    {n:"Jiraiya", i:"jiraiya.jpg"},
+    {n:"Madara Uchiha", i:"madara2.jpg"},
+    {n:"Obito Uchiha", i:"obito.jpg"},
+    {n:"Pain (Nagato)", i:"pain.jpg"},
+    {n:"Minato Namikaze", i:"minato.jpg"},
+    {n:"Gaara", i:"gaara.jpg"},
+    {n:"Rock Lee", i:"rocklee.jpg"},
+    {n:"Neji Hyuga", i:"neji.jpg"},
+    {n:"Shikamaru Nara", i:"summa.jpg"},
+    {n:"Tsunade", i:"tsunade.jpg"},
+    {n:"Orochimaru", i:"oro.jpg"},
+    {n:"Killer Bee", i:"bee.jpg"},
+    {n:"Hashirama Senju", i:"has.jpg"},
+    {n:"Tobirama Senju", i:"tobi.jpg"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData){
+    let html = "";
+    characters.forEach(c => {
+      const key = safeKey(c.n);
+      const count = votesData?.[key] || 0;
+
+      html += `
+        <div class="card">
+          <img src="${c.i}">
+          <h3>${c.n}</h3>
+          <p>Votes: <span id="${key}v">${count}</span></p>
+          <button onclick="castVote('${c.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("characters").innerHTML = html;
+  }
+
+  onValue(ref(database, "narutoTotalVotes"), (snapshot) => {
+    document.getElementById("totalVotes").innerText = snapshot.val() || 0;
+  });
+
+  onValue(ref(database, "narutoVotes"), (snapshot) => {
+    const data = snapshot.val() || {};
+    renderVotes(data);
+  });
+
+  window.castVote = function(character){
+
+    let hasVoted = localStorage.getItem("narutoHasVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(character);
+
+    const charRef = ref(database, "narutoVotes/" + key);
+    const overallRef = ref(database, "narutoTotalVotes");
+
+    runTransaction(charRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("narutoHasVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // ------------------- COMMENTS -------------------
+
+  function showComments(commentData){
+    let html = "";
+    if(commentData){
+      const commentArray = Object.values(commentData);
+
+      commentArray.reverse().forEach(x => {
+        html += `
+          <div class="singleComment">
+            <b>${x.name}</b>
+            <p>${x.comment}</p>
+          </div>
+        `;
+      });
+    }
+    document.getElementById("commentList").innerHTML = html;
+  }
+
+  onValue(ref(database, "narutoComments"), (snapshot) => {
+    showComments(snapshot.val());
+  });
+
+  window.addComment = function(){
+    const name = document.getElementById("name").value.trim();
+    const comment = document.getElementById("comment").value.trim();
+
+    if(name === "" || comment === ""){
+      alert("Please enter name and comment!");
+      return;
+    }
+
+    const newCommentRef = push(ref(database, "narutoComments"));
+
+    set(newCommentRef, {
+      name: name,
+      comment: comment,
+      time: Date.now()
+    });
+
+    document.getElementById("name").value = "";
+    document.getElementById("comment").value = "";
+  };
+
+</script>
+
+<header>
+  <h1>🔥 Naruto Fan Poll 🔥</h1>
+  <p>Vote your favourite character (Only One Vote Allowed)</p>
+</header>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message" style="text-align:center;color:lightgreen;"></p>
+
+<div class="container" id="characters"></div>
+
+<div style="text-align:center; margin:20px; color:lightgreen;">
+💡 Do you want polling for other anime like One Piece, Attack on Titan, Dragon Ball?
+</div>
+
+<div class="commentBox">
+  <h2 style="text-align:center;">💬 Comments</h2>
+
+  <input id="name" placeholder="Name">
+  <textarea id="comment" placeholder="Comment"></textarea>
+  <button onclick="addComment()">Post</button>
+
+  <div id="commentList"></div>
+</div>
+
+<footer>
+<b>Naruto Fan Poll</b> <br><br>
+
+⚠️ Disclaimer: This is a fan-made website created for educational and entertainment purposes only.  
+All characters, images, anime concepts belong to their respective owners.  
+No copyright infringement intended. <br><br>
+
+📖 Creator: Masashi Kishimoto <br>
+📺 Studio: Pierrot <br>
+🏢 Publisher: Shueisha <br>
+📡 Distributor: TV Tokyo <br>
+🎼 Music: Toshio Masuda <br><br>
+
+We deeply respect all creators and production companies involved in Naruto.
+</footer>
+
+</body>
+</html>

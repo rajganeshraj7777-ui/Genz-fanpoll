@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime FanPoll Website</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0b0b0b;
+      color: white;
+    }
+
+    header {
+      background-color: black;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: cyan;
+    }
+
+    nav {
+      background-color: #222;
+      padding: 12px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+    }
+
+    nav a:hover {
+      color: yellow;
+    }
+
+    .container {
+      width: 90%;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .anime-grid {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .anime-card {
+      width: 300px;
+      background-color: #111;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .anime-card:hover {
+      transform: scale(1.05);
+    }
+
+    .anime-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .anime-card h2 {
+      text-align: center;
+      padding: 10px;
+      margin: 0;
+      color: orange;
+    }
+
+    footer {
+      background-color: black;
+      padding: 20px;
+      text-align: center;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>🔥 Anime FanPoll Website 🔥</h1>
+    <p>Welcome to my Anime World</p>
+  </header>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacypolicy.html">Privacy Policy</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h2 style="text-align:center; color:cyan;">Choose Your Favorite Anime</h2>
+    <p style="text-align:center;">Click any anime image to open its page.</p>
+
+    <div class="anime-grid">
+
+      <!-- Demon Slayer Card -->
+        <div class="anime-card">
+       <a href="demonslayer.html"><img src="dmgroup.jpg"></a>
+          <h2>Demon Slayer</h2>
+        </div>
+      </a>
+
+      <!-- Naruto Card -->
+      <a href="narutopage.html" style="text-decoration:none;">
+        <div class="anime-card">
+          <img src="naruto2.jpg">
+          <h2>Naruto</h2>
+          
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Anime Fan Website | All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>
