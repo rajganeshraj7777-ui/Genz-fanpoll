@@ -120,6 +120,68 @@
       font-size: 18px;
     }
 
+    /* COMMENT SECTION */
+    .commentBox {
+      background: #1a1a1a;
+      width: 92%;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    .commentBox h2 {
+      font-size: 20px;
+      text-align: center;
+      color: cyan;
+    }
+
+    .commentBox p {
+      text-align: center;
+      font-size: 14px;
+      color: lightgreen;
+    }
+
+    input, textarea {
+      width: 95%;
+      padding: 12px;
+      margin: 8px auto;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      display: block;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    .commentBtn {
+      background: cyan;
+      border: none;
+      padding: 12px;
+      width: 90%;
+      max-width: 200px;
+      font-size: 16px;
+      color: black;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .commentBtn:hover {
+      background: yellow;
+      color: black;
+    }
+
+    .singleComment {
+      background: #222;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
     footer {
       background-color: black;
       padding: 15px;
@@ -182,7 +244,7 @@
 
     <!-- SEARCH BOX -->
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search here... (Hero, District, Naruto...)">
+      <input type="text" id="searchInput" placeholder="Search here...">
     </div>
 
     <div class="anime-grid" id="cardContainer">
@@ -254,6 +316,18 @@
     </div>
   </div>
 
+  <!-- COMMENT SECTION -->
+  <div class="commentBox">
+    <h2>💬 Comments</h2>
+    <p>If you want me to add anything else, tell me.</p>
+
+    <input id="name" placeholder="Name">
+    <textarea id="comment" placeholder="Comment"></textarea>
+    <button class="commentBtn" onclick="addComment()">Post</button>
+
+    <div id="commentList"></div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
     <p>© 2026 Genz FanPoll Website | All Rights Reserved</p>
@@ -277,6 +351,50 @@
         }
       });
     });
+
+    // COMMENT SYSTEM (LOCAL STORAGE)
+    function loadComments() {
+      let comments = JSON.parse(localStorage.getItem("homeComments")) || [];
+      let html = "";
+
+      comments.reverse().forEach(c => {
+        html += `
+          <div class="singleComment">
+            <b>${c.name}</b>
+            <p>${c.comment}</p>
+          </div>
+        `;
+      });
+
+      document.getElementById("commentList").innerHTML = html;
+    }
+
+    function addComment() {
+      const name = document.getElementById("name").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+
+      if (name === "" || comment === "") {
+        alert("Please enter name and comment!");
+        return;
+      }
+
+      let comments = JSON.parse(localStorage.getItem("homeComments")) || [];
+
+      comments.push({
+        name: name,
+        comment: comment,
+        time: Date.now()
+      });
+
+      localStorage.setItem("homeComments", JSON.stringify(comments));
+
+      document.getElementById("name").value = "";
+      document.getElementById("comment").value = "";
+
+      loadComments();
+    }
+
+    loadComments();
   </script>
 
 </body>
