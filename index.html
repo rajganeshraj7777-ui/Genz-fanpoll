@@ -120,49 +120,51 @@
       font-size: 18px;
     }
 
-    /* COMMENT SECTION */
+    /* COMMENT SECTION (REDUCED SIZE) */
     .commentBox {
       background: #1a1a1a;
-      width: 92%;
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 15px;
+      width: 88%;
+      max-width: 450px;
+      margin: 25px auto;
+      padding: 12px;
       border-radius: 12px;
     }
 
     .commentBox h2 {
-      font-size: 20px;
+      font-size: 18px;
       text-align: center;
       color: cyan;
+      margin-bottom: 5px;
     }
 
     .commentBox p {
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       color: lightgreen;
+      margin-top: 0;
     }
 
     input, textarea {
-      width: 95%;
-      padding: 12px;
-      margin: 8px auto;
+      width: 92%;
+      padding: 10px;
+      margin: 6px auto;
       border-radius: 10px;
       border: none;
-      font-size: 15px;
+      font-size: 14px;
       display: block;
     }
 
     textarea {
-      height: 80px;
+      height: 65px;
     }
 
     .commentBtn {
       background: cyan;
       border: none;
-      padding: 12px;
-      width: 90%;
-      max-width: 200px;
-      font-size: 16px;
+      padding: 10px;
+      width: 80%;
+      max-width: 160px;
+      font-size: 15px;
       color: black;
       border-radius: 10px;
       cursor: pointer;
@@ -177,9 +179,10 @@
 
     .singleComment {
       background: #222;
-      margin: 10px 0;
-      padding: 12px;
+      margin: 8px 0;
+      padding: 10px;
       border-radius: 10px;
+      font-size: 14px;
     }
 
     footer {
@@ -217,6 +220,10 @@
       .search-box input {
         width: 90%;
       }
+
+      .commentBox {
+        width: 92%;
+      }
     }
   </style>
 </head>
@@ -225,8 +232,8 @@
 
   <!-- HEADER -->
   <header>
-    <h1>🔥 Anime FanPoll Website 🔥</h1>
-    <p>Welcome to my Anime World</p>
+    <h1>🔥 Genz FanPoll Website 🔥</h1>
+    <p>Welcome to my Genz FanPoll</p>
   </header>
 
   <!-- NAVBAR -->
@@ -246,10 +253,16 @@
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search here...">
     </div>
+    <h2 style="text-align:center; color:cyan; margin-top:20px;">
+   Tamil Actors 
+</h2>
+<p style="text-align:center; color:lightgreen; font-size:14px; margin-bottom:5px;">
+  Select your favourite category
+</p>
 
     <div class="anime-grid" id="cardContainer">
-
       <!-- Hero Card -->
+       
       <a href="heropage.html" class="cardLink">
         <div class="anime-card">
           <img src="vi.jpg" alt="Tamil Hero">
@@ -258,33 +271,33 @@
       </a>
 
       <!-- District Card -->
-      <a href="district.html" class="cardLink">
+      <a href="rajini.html" class="cardLink">
         <div class="anime-card">
-          <img src="theni.jpg" alt="District">
-          <h2>District</h2>
+          <img src="rajini3.jpg" alt="District">
+          <h2>Rajini</h2>
         </div>
       </a>
 
       <!-- Demon Slayer Card -->
-      <a href="demonslayer.html" class="cardLink">
+      <a href="kamal.html" class="cardLink">
         <div class="anime-card">
-          <img src="dmgroup.jpg" alt="Demon Slayer">
-          <h2>Demon Slayer</h2>
+          <img src="kamal3.jpg" alt="Demon Slayer">
+          <h2>Kamal</h2>
         </div>
       </a>
 
       <!-- Naruto Card -->
-      <a href="narutopage.html" class="cardLink">
+      <a href="vijay.html" class="cardLink">
         <div class="anime-card">
-          <img src="naruto2.jpg" alt="Naruto">
-          <h2>Naruto</h2>
+          <img src="vijay.jpg" alt="Naruto">
+          <h2>Vijay</h2>
         </div>
       </a>
 
       <!-- Food Card -->
-      <a href="food2.html" class="cardLink">
+      <a href="ajith.html" class="cardLink">
         <div class="anime-card">
-          <img src="food.jpg" alt="Food">
+          <img src="ajith.jpg" alt="Food">
           <h2>Food</h2>
         </div>
       </a>
