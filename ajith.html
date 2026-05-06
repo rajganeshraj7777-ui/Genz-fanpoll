@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajith Movies Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: #00cec9;
+  text-align: center;
+  padding: 18px;
+  color: black;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.search-box {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.search-box input {
+  width: 85%;
+  max-width: 450px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px auto;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 14px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 90%;
+  max-width: 350px;
+  margin: 15px auto;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.aboutHero {
+  background: #1a1a1a;
+  width: 92%;
+  max-width: 800px;
+  margin: 15px auto;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  line-height: 22px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  text-align: center;
+  padding: 15px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #00cec9;
+}
+
+.card p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ddd;
+}
+
+button {
+  background: #00cec9;
+  border: none;
+  padding: 12px;
+  width: 90%;
+  max-width: 200px;
+  font-size: 16px;
+  color: black;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #00ffea;
+}
+
+.progressBox {
+  width: 95%;
+  height: 18px;
+  background: #333;
+  border-radius: 12px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 12px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 20px;
+}
+
+#message {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  color: lightgreen;
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🔥 Ajith Movies Fan Poll 🔥</h1>
+  <p>Vote your favourite Thala Ajith movie (Only One Vote Allowed)</p>
+</header>
+
+<div class="aboutHero">
+  🌟 <b>Thala Ajith</b> is known for his style, screen presence, and powerful mass roles.  
+  He is respected for his simplicity, discipline, and loyalty towards fans.  
+  Ajith movies always give strong action, emotion, and pure entertainment.
+</div>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Search Ajith movie...">
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message"></p>
+
+<div class="container" id="movies"></div>
+
+<footer>
+<b>Ajith Movies Fan Poll</b> <br><br>
+⚠️ Disclaimer: This is a fan-made website created for entertainment and educational purposes only.  
+All movie names and content belong to their respective owners.  
+No copyright infringement intended.
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const movies = [
+    {n:"Mankatha", d:"Ultimate mass gangster movie", c:"#00cec9"},
+    {n:"Billa", d:"Stylish action entertainer", c:"#ff4757"},
+    {n:"Billa 2", d:"Gangster prequel action", c:"#ffa502"},
+    {n:"Vedalam", d:"Mass action blockbuster", c:"#1e90ff"},
+    {n:"Viswasam", d:"Family sentiment + mass", c:"#2ecc71"},
+    {n:"Valimai", d:"Bike action entertainer", c:"#3742fa"},
+    {n:"Thunivu", d:"Bank heist action", c:"#ff6b81"},
+    {n:"Aarambam", d:"Stylish action thriller", c:"#00cec9"},
+    {n:"Yennai Arindhaal", d:"Cop action thriller", c:"#fd79a8"},
+    {n:"Vivegam", d:"Spy action entertainer", c:"#6c5ce7"},
+    {n:"Nerkonda Paarvai", d:"Courtroom powerful remake", c:"#00b894"},
+    {n:"Varalaru", d:"Dual role family drama", c:"#d63031"},
+    {n:"Citizen", d:"Vigilante action movie", c:"#e84393"},
+    {n:"Dheena", d:"Thala title movie", c:"#0984e3"},
+    {n:"Attagasam", d:"Mass action entertainer", c:"#fdcb6e"},
+    {n:"Villain", d:"Dual role action drama", c:"#e17055"},
+    {n:"Red", d:"Action thriller", c:"#00bcd4"},
+    {n:"Amaravathi", d:"Debut romantic movie", c:"#ff9f43"},
+    {n:"Kadhal Kottai", d:"Classic love story", c:"#10ac84"},
+    {n:"Vaali", d:"Twin role blockbuster", c:"#2ed573"},
+    {n:"Aasai", d:"Romantic thriller hit", c:"#ff4757"},
+    {n:"Unnai Thedi", d:"Family drama", c:"#ffa502"},
+    {n:"Kandukondain Kandukondain", d:"Multi-star romance drama", c:"#1e90ff"},
+    {n:"Mugavaree", d:"Motivation classic", c:"#2ecc71"},
+    {n:"Poovellam Un Vasam", d:"Romantic family drama", c:"#3742fa"},
+    {n:"Raja", d:"Romantic entertainer", c:"#ff6b81"},
+    {n:"Anandham", d:"Family entertainer", c:"#00cec9"},
+    {n:"Jana", d:"Action drama", c:"#fd79a8"},
+    {n:"Ji", d:"Action entertainer", c:"#6c5ce7"},
+    {n:"Paramasivan", d:"Action thriller", c:"#00b894"},
+    {n:"Thirupathi", d:"Mass action movie", c:"#d63031"},
+    {n:"Aalwar", d:"Action entertainer", c:"#e84393"},
+    {n:"Kireedam", d:"Emotional action drama", c:"#0984e3"},
+    {n:"Asal", d:"Stylish mass action", c:"#fdcb6e"},
+    {n:"Aegan", d:"Action entertainer", c:"#e17055"},
+    {n:"Billa (2007)", d:"Stylish remake blockbuster", c:"#00bcd4"},
+    {n:"English Vinglish (Cameo)", d:"Special appearance", c:"#ff9f43"},
+    {n:"Arrambam", d:"Stylish thriller action", c:"#10ac84"},
+    {n:"Thala Pola Varuma", d:"Fan favourite title", c:"#2ed573"},
+    {n:"Ennai Arindhaal", d:"Cop thriller", c:"#ff4757"},
+    {n:"Kadhal Mannan", d:"Romantic entertainer", c:"#ffa502"},
+    {n:"Nee Varuvai Ena", d:"Romantic drama", c:"#1e90ff"},
+    {n:"Aval Varuvala", d:"Romantic drama", c:"#2ecc71"},
+    {n:"Pavithra", d:"Family drama", c:"#3742fa"},
+    {n:"Rettai Jadai Vayasu", d:"Comedy romance", c:"#ff6b81"},
+    {n:"Ullasam", d:"Youth action drama", c:"#00cec9"},
+    {n:"Rajavin Parvaiyile", d:"Early family movie", c:"#fd79a8"},
+    {n:"Thodarum", d:"Drama film", c:"#6c5ce7"},
+    {n:"Good Bad Ugly", d:"Upcoming Ajith project", c:"#00b894"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData, totalVotes, filter=""){
+    let html = "";
+
+    movies.forEach(m => {
+      if(!m.n.toLowerCase().includes(filter)) return;
+
+      const key = safeKey(m.n);
+      const count = votesData?.[key] || 0;
+
+      let percent = 0;
+      if(totalVotes > 0){
+        percent = ((count / totalVotes) * 100).toFixed(1);
+      }
+
+      html += `
+        <div class="card">
+          <h3>${m.n}</h3>
+          <p>${m.d}</p>
+
+          <p>${percent}% (${count} votes)</p>
+
+          <div class="progressBox">
+            <div class="progressFill" style="width:${percent}%; background:${m.c};"></div>
+          </div>
+
+          <button onclick="castVote('${m.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("movies").innerHTML = html;
+  }
+
+  let currentVotes = {};
+  let currentTotal = 0;
+
+  onValue(ref(database, "ajithTotalVotes"), (snapshot) => {
+    currentTotal = snapshot.val() || 0;
+    document.getElementById("totalVotes").innerText = currentTotal;
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  onValue(ref(database, "ajithVotes"), (snapshot) => {
+    currentVotes = snapshot.val() || {};
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  window.castVote = function(movie){
+
+    let hasVoted = localStorage.getItem("ajithVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(movie);
+
+    const movieRef = ref(database, "ajithVotes/" + key);
+    const overallRef = ref(database, "ajithTotalVotes");
+
+    runTransaction(movieRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("ajithVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // SEARCH
+  document.getElementById("searchInput").addEventListener("keyup", function(){
+    let filter = this.value.toLowerCase();
+    renderVotes(currentVotes, currentTotal, filter);
+  });
+</script>
+
+</body>
+</html>

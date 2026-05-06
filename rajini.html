@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rajinikanth Movies Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: #ffcc00;
+  text-align: center;
+  padding: 18px;
+  color: black;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.search-box {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.search-box input {
+  width: 85%;
+  max-width: 450px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px auto;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 14px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 90%;
+  max-width: 350px;
+  margin: 15px auto;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.aboutHero {
+  background: #1a1a1a;
+  width: 92%;
+  max-width: 800px;
+  margin: 15px auto;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  line-height: 22px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  text-align: center;
+  padding: 15px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #ffcc00;
+}
+
+.card p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ddd;
+}
+
+button {
+  background: #ffcc00;
+  border: none;
+  padding: 12px;
+  width: 90%;
+  max-width: 200px;
+  font-size: 16px;
+  color: black;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: orange;
+}
+
+.progressBox {
+  width: 95%;
+  height: 18px;
+  background: #333;
+  border-radius: 12px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 12px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 20px;
+}
+
+#message {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  color: lightgreen;
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🔥 Rajinikanth Movies Fan Poll 🔥</h1>
+  <p>Vote your favourite Superstar Rajini movie (Only One Vote Allowed)</p>
+</header>
+
+<div class="aboutHero">
+  🌟 <b>Rajinikanth</b> is not just a Tamil actor, he is a true symbol of hard work, simplicity, and mass entertainment.  
+  His screen presence, style, and dialogue delivery inspired generations.  
+  He is respected worldwide as the <b>Superstar of Indian Cinema</b>.
+</div>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Search Rajini movie...">
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message"></p>
+
+<div class="container" id="movies"></div>
+
+<footer>
+<b>Rajinikanth Movies Fan Poll</b> <br><br>
+⚠️ Disclaimer: This is a fan-made website created for entertainment and educational purposes only.  
+All movie names and content belong to their respective owners.  
+No copyright infringement intended.
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const movies = [
+    {n:"Baasha", d:"The iconic gangster mass movie", c:"#ffcc00"},
+    {n:"Muthu", d:"Family entertainer with superstar style", c:"#e74c3c"},
+    {n:"Padayappa", d:"Powerful drama and mass dialogues", c:"#2ecc71"},
+    {n:"Sivaji", d:"Commercial blockbuster with style", c:"#3498db"},
+    {n:"Enthiran", d:"Sci-fi milestone of Indian cinema", c:"#9b59b6"},
+    {n:"Kabali", d:"Stylish action drama", c:"#1abc9c"},
+    {n:"Petta", d:"Pure Rajini fan feast", c:"#e67e22"},
+    {n:"Jailer", d:"Mass comeback blockbuster", c:"#ff4757"},
+    {n:"Thalapathi", d:"Classic Mani Ratnam masterpiece", c:"#00cec9"},
+    {n:"Annamalai", d:"Superstar mass and sentiment", c:"#fd79a8"},
+    {n:"Coolie", d:"Stylish action entertainer", c:"#6c5ce7"},
+    {n:"Arunachalam", d:"Comedy + family entertainer", c:"#00b894"},
+    {n:"Chandramukhi", d:"Horror thriller blockbuster", c:"#d63031"},
+    {n:"Veera", d:"Village mass entertainer", c:"#0984e3"},
+    {n:"2.0", d:"", c:"#e84393"},
+    {n:"Guru Sishyan", d:"Comedy action entertainer", c:"#2d3436"},
+    {n:"Thillu Mullu", d:"Legendary comedy movie", c:"#fdcb6e"},
+    {n:"Darbar", d:"Police action entertainer", c:"#ff6b81"},
+    {n:"Kaala", d:"Political action drama", c:"#7bed9f"},
+    {n:"Lingaa", d:"Action drama entertainer", c:"#a29bfe"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData, totalVotes, filter=""){
+    let html = "";
+
+    movies.forEach(m => {
+      if(!m.n.toLowerCase().includes(filter)) return;
+
+      const key = safeKey(m.n);
+      const count = votesData?.[key] || 0;
+
+      let percent = 0;
+      if(totalVotes > 0){
+        percent = ((count / totalVotes) * 100).toFixed(1);
+      }
+
+      html += `
+        <div class="card">
+          <h3>${m.n}</h3>
+          <p>${m.d}</p>
+
+          <p>${percent}% (${count} votes)</p>
+
+          <div class="progressBox">
+            <div class="progressFill" style="width:${percent}%; background:${m.c};"></div>
+          </div>
+
+          <button onclick="castVote('${m.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("movies").innerHTML = html;
+  }
+
+  let currentVotes = {};
+  let currentTotal = 0;
+
+  onValue(ref(database, "rajiniTotalVotes"), (snapshot) => {
+    currentTotal = snapshot.val() || 0;
+    document.getElementById("totalVotes").innerText = currentTotal;
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  onValue(ref(database, "rajiniVotes"), (snapshot) => {
+    currentVotes = snapshot.val() || {};
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  window.castVote = function(movie){
+
+    let hasVoted = localStorage.getItem("rajiniVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(movie);
+
+    const movieRef = ref(database, "rajiniVotes/" + key);
+    const overallRef = ref(database, "rajiniTotalVotes");
+
+    runTransaction(movieRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("rajiniVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // SEARCH
+  document.getElementById("searchInput").addEventListener("keyup", function(){
+    let filter = this.value.toLowerCase();
+    renderVotes(currentVotes, currentTotal, filter);
+  });
+</script>
+
+</body>
+</html>
