@@ -17,11 +17,17 @@ body {
 header {
   background: green;
   text-align: center;
-  padding: 20px;
+  padding: 18px;
 }
 
 header h1 {
   margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  font-size: 14px;
+  margin-top: 8px;
 }
 
 .warning {
@@ -29,76 +35,116 @@ header h1 {
   background: #222;
   color: orange;
   padding: 12px;
-  margin: 15px;
+  margin: 15px auto;
   border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 14px;
 }
 
 .totalVotes {
   text-align: center;
   background: #222;
-  width: 300px;
-  margin: 20px auto;
-  padding: 10px;
+  width: 90%;
+  max-width: 350px;
+  margin: 15px auto;
+  padding: 12px;
   border-radius: 10px;
+  font-size: 16px;
 }
 
 .container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
-  padding: 20px;
+  padding: 15px;
+  max-width: 1000px;
+  margin: auto;
 }
 
 .card {
   background: #1a1a1a;
-  width: 230px;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  padding-bottom: 10px;
+  padding: 15px;
 }
 
-.card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ddd;
 }
 
 button {
   background: green;
   border: none;
-  padding: 8px 15px;
+  padding: 12px;
+  width: 90%;
+  max-width: 200px;
+  font-size: 16px;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
   background: darkred;
 }
 
+/* Progress Bar */
+.progressBox {
+  width: 95%;
+  height: 18px;
+  background: #333;
+  border-radius: 12px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 12px;
+}
+
 .commentBox {
   background: #1a1a1a;
-  width: 80%;
+  width: 92%;
+  max-width: 700px;
   margin: 20px auto;
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 12px;
+}
+
+.commentBox h2 {
+  font-size: 20px;
 }
 
 input, textarea {
   width: 95%;
-  padding: 10px;
-  margin: 8px;
-  border-radius: 8px;
+  padding: 12px;
+  margin: 8px auto;
+  border-radius: 10px;
   border: none;
+  font-size: 15px;
+  display: block;
+}
+
+textarea {
+  height: 80px;
 }
 
 .singleComment {
   background: #222;
   margin: 10px 0;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 footer {
@@ -107,14 +153,30 @@ footer {
   padding: 20px;
   font-size: 13px;
   color: #ccc;
+  margin-top: 20px;
 }
 
-@media (max-width: 600px) {
-  .totalVotes { width: 90%; }
-  .warning { width: 90%; margin: 10px auto; }
-  .card { width: 90%; }
-  .commentBox { width: 90%; }
-  input, textarea { width: 90%; }
+#message {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  color: lightgreen;
+}
+
+/* Mobile Extra */
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 15px;
+  }
 }
 </style>
 </head>
@@ -141,43 +203,56 @@ footer {
   const database = getDatabase(app);
 
   const characters = [
-    {n:"Tanjiro Kamado", i:"01.html"},
-    {n:"Nezuko Kamado", i:"02.html"},
-    {n:"Zenitsu Agatsuma", i:"03.html"},
-    {n:"Inosuke Hashibira", i:"04.html"},
-    {n:"Giyu", i:"05.html"},
-    {n:"Rengoku", i:"06.html"},
-    {n:"Shinobu", i:"07.html"},
-    {n:"Mitsuri", i:"08.html"},
-    {n:"Obanai", i:"09.html"},
-    {n:"Sanemi", i:"10.html"},
-    {n:"Muichiro", i:"11.html"},
-    {n:"Gyomei", i:"12.html"},
-    {n:"Tengen", i:"13.html"},
-    {n:"Akaza", i:"14.html"},
-    {n:"Doma", i:"15.html"},
-    {n:"Kokushibo", i:"16.html"},
-    {n:"Muzan", i:"21.html"},
-    {n:"Kanao", i:"18.html"},
-    {n:"Genya", i:"19.html"},
-    {n:"Sabito", i:"20.html"}
+    {n:"Tanjiro Kamado", c:"#e74c3c"},
+    {n:"Nezuko Kamado", c:"#ff69b4"},
+    {n:"Zenitsu Agatsuma", c:"#f1c40f"},
+    {n:"Inosuke Hashibira", c:"#3498db"},
+    {n:"Giyu", c:"#2980b9"},
+    {n:"Rengoku", c:"#e67e22"},
+    {n:"Shinobu", c:"#9b59b6"},
+    {n:"Mitsuri", c:"#ff4fa3"},
+    {n:"Obanai", c:"#2ecc71"},
+    {n:"Sanemi", c:"#95a5a6"},
+    {n:"Muichiro", c:"#00cec9"},
+    {n:"Gyomei", c:"#f39c12"},
+    {n:"Tengen", c:"#8e44ad"},
+    {n:"Akaza", c:"#00bcd4"},
+    {n:"Doma", c:"#1abc9c"},
+    {n:"Kokushibo", c:"#c0392b"},
+    {n:"Muzan", c:"#ffffff"},
+    {n:"Kanao", c:"#a29bfe"},
+    {n:"Genya", c:"#636e72"},
+    {n:"Sabito", c:"#fd79a8"}
   ];
 
   function safeKey(name){
     return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
   }
 
-  function renderVotes(votesData){
+  function renderVotes(votesData, totalVotes){
     let html = "";
+
     characters.forEach(c => {
       const key = safeKey(c.n);
       const count = votesData?.[key] || 0;
 
+      let percent = 0;
+      if(totalVotes > 0){
+        percent = ((count / totalVotes) * 100).toFixed(1);
+      }
+
       html += `
         <div class="card">
-          <img src="${c.i}">
           <h3>${c.n}</h3>
-          <p>Votes: <span id="${key}v">${count}</span></p>
+
+          <p>
+            ${percent}% (${count} votes)
+          </p>
+
+          <div class="progressBox">
+            <div class="progressFill" style="width:${percent}%; background:${c.c};"></div>
+          </div>
+
           <button onclick="castVote('${c.n}')">Vote</button>
         </div>
       `;
@@ -186,18 +261,20 @@ footer {
     document.getElementById("characters").innerHTML = html;
   }
 
-  // Total votes listener
+  let currentVotes = {};
+  let currentTotal = 0;
+
   onValue(ref(database, "totalVotes"), (snapshot) => {
-    document.getElementById("totalVotes").innerText = snapshot.val() || 0;
+    currentTotal = snapshot.val() || 0;
+    document.getElementById("totalVotes").innerText = currentTotal;
+    renderVotes(currentVotes, currentTotal);
   });
 
-  // Votes listener
   onValue(ref(database, "votes"), (snapshot) => {
-    const data = snapshot.val() || {};
-    renderVotes(data);
+    currentVotes = snapshot.val() || {};
+    renderVotes(currentVotes, currentTotal);
   });
 
-  // Vote function
   window.castVote = function(character){
 
     let hasVoted = localStorage.getItem("hasVoted");
@@ -220,8 +297,7 @@ footer {
     document.getElementById("message").innerText = "✅ Vote submitted!";
   };
 
-  // ------------------- COMMENTS -------------------
-
+  // COMMENTS
   function showComments(commentData){
     let html = "";
     if(commentData){
@@ -239,12 +315,10 @@ footer {
     document.getElementById("commentList").innerHTML = html;
   }
 
-  // Live comments listener
   onValue(ref(database, "comments"), (snapshot) => {
     showComments(snapshot.val());
   });
 
-  // Add comment function
   window.addComment = function(){
     const name = document.getElementById("name").value.trim();
     const comment = document.getElementById("comment").value.trim();
@@ -265,11 +339,10 @@ footer {
     document.getElementById("name").value = "";
     document.getElementById("comment").value = "";
   };
-
 </script>
 
 <header>
-  <h1>🔥 Demon Slayer Fan Poll</h1>
+  <h1>🔥 Demon Slayer Fan Poll 🔥</h1>
   <p>Vote your favourite character (Only One Vote Allowed)</p>
 </header>
 
@@ -281,11 +354,11 @@ footer {
 Total Votes: <span id="totalVotes">0</span>
 </div>
 
-<p id="message" style="text-align:center;color:lightgreen;"></p>
+<p id="message"></p>
 
 <div class="container" id="characters"></div>
 
-<div style="text-align:center; margin:20px; color:lightgreen;">
+<div style="text-align:center; margin:20px; color:lightgreen; font-size:15px;">
 💡 Do you want polling for other anime like Naruto, One Piece, Attack on Titan?
 </div>
 
@@ -305,6 +378,7 @@ Total Votes: <span id="totalVotes">0</span>
 ⚠️ Disclaimer: This is a fan-made website created for educational and entertainment purposes only.  
 All characters, images, anime concepts belong to their respective owners.  
 No copyright infringement intended. <br><br>
+
 🎬 Creator: Koyoharu Gotouge <br>
 📺 Studio: ufotable <br>
 🏢 Publisher: Shueisha <br>
