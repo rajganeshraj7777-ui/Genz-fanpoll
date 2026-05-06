@@ -15,26 +15,33 @@
 
     header {
       background-color: black;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
     }
 
     header h1 {
       margin: 0;
       color: cyan;
+      font-size: 22px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: white;
+      font-size: 14px;
     }
 
     nav {
       background-color: #222;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
-      font-size: 18px;
+      margin: 0 10px;
+      font-size: 15px;
     }
 
     nav a:hover {
@@ -42,51 +49,92 @@
     }
 
     .container {
-      width: 90%;
+      width: 95%;
       margin: auto;
-      padding: 20px;
+      padding: 15px;
     }
 
+    /* SLIDER STYLE */
     .anime-grid {
       display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 30px;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 15px 5px;
+      -webkit-overflow-scrolling: touch;
     }
 
+    .anime-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* CARD DESIGN */
     .anime-card {
-      width: 300px;
+      flex: 0 0 auto;
+      width: 250px;
       background-color: #111;
       border-radius: 15px;
       overflow: hidden;
       box-shadow: 0 0 15px rgba(255,255,255,0.2);
-      transition: transform 0.3s;
       cursor: pointer;
+      scroll-snap-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .anime-card:hover {
       transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,255,255,0.8);
     }
 
     .anime-card img {
       width: 100%;
-      height: 200px;
+      height: 150px;
       object-fit: cover;
     }
 
     .anime-card h2 {
       text-align: center;
-      padding: 10px;
+      padding: 8px;
       margin: 0;
       color: orange;
+      font-size: 18px;
     }
 
     footer {
       background-color: black;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
-      margin-top: 30px;
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 0;
+      color: white;
+      font-size: 14px;
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 600px) {
+      .anime-card {
+        width: 180px; /* Mobile la 3 cards varum */
+      }
+
+      .anime-card img {
+        height: 120px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      nav a {
+        font-size: 14px;
+        margin: 0 8px;
+      }
     }
   </style>
 </head>
@@ -95,7 +143,7 @@
 
   <!-- HEADER -->
   <header>
-    <h1> Anime FanPoll Website</h1>
+    <h1>🔥 Anime FanPoll Website 🔥</h1>
     <p>Welcome to my Anime World</p>
   </header>
 
@@ -109,29 +157,60 @@
 
   <!-- MAIN CONTENT -->
   <div class="container">
-    <h2 style="text-align:center; color:cyan;">Choose Your Favorite Anime</h2>
-    <p style="text-align:center;">Click any anime image to open its page.</p>
+    <h2 style="text-align:center; color:cyan;">Choose Your Favorite</h2>
+    <p style="text-align:center;">Swipe left/right to see more cards.</p>
 
     <div class="anime-grid">
 
       <!-- Demon Slayer Card -->
+      <a href="demonslayer.html">
         <div class="anime-card">
-       <a href="demonslayer.html"><img src="dmgroup.jpg"></a>
+          <img src="dmgroup.jpg" alt="Demon Slayer">
           <h2>Demon Slayer</h2>
         </div>
       </a>
 
       <!-- Naruto Card -->
-      <a href="narutopage.html" style="text-decoration:none;">
+      <a href="narutopage.html">
         <div class="anime-card">
-          <img src="naruto2.jpg">
+          <img src="naruto2.jpg" alt="Naruto">
           <h2>Naruto</h2>
-          
+        </div>
+      </a>
+
+      <!-- Food Card -->
+      <a href="food.html">
+        <div class="anime-card">
+          <img src="food.jpg">
+          <h2>Favourite Food</h2>
+        </div>
+      </a>
+
+      <!-- District Card -->
+      <a href="district.html">
+        <div class="anime-card">
+          <img src="theni.jpg">
+          <h2>Favourite District</h2>
+        </div>
+      </a>
+
+      <!-- IPL Card -->
+      <a href="ipl.html">
+        <div class="anime-card">
+          <img src="ipl.jpg" alt="IPL Team">
+          <h2>Favourite IPL Team</h2>
+        </div>
+      </a>
+
+      <!-- Cartoon Card -->
+      <a href="cartoon.html">
+        <div class="anime-card">
+          <img src="ben.jpg" alt="Cartoon">
+          <h2>Favourite Cartoon</h2>
         </div>
       </a>
 
     </div>
-
   </div>
 
   <!-- FOOTER -->
