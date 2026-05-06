@@ -54,6 +54,22 @@
       padding: 15px;
     }
 
+    /* SEARCH BOX */
+    .search-box {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .search-box input {
+      width: 80%;
+      max-width: 400px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
     /* SLIDER STYLE */
     .anime-grid {
       display: flex;
@@ -135,6 +151,10 @@
         font-size: 14px;
         margin: 0 8px;
       }
+
+      .search-box input {
+        width: 90%;
+      }
     }
   </style>
 </head>
@@ -160,26 +180,31 @@
     <h2 style="text-align:center; color:cyan;">Choose Your Favorite</h2>
     <p style="text-align:center;">Swipe left/right to see more cards.</p>
 
-    <div class="anime-grid">
+    <!-- SEARCH BOX -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search here... (Hero, District, Naruto...)">
+    </div>
 
-      <!-- Hero Card (FIRST) -->
-      <a href="hero.jpg">
+    <div class="anime-grid" id="cardContainer">
+
+      <!-- Hero Card -->
+      <a href="heropage.html" class="cardLink">
         <div class="anime-card">
           <img src="vi.jpg" alt="Tamil Hero">
-          <h2>Tamil Hero</h2>
+          <h2>Select favourite Hero</h2>
         </div>
       </a>
 
-      <!-- District Card (SECOND) -->
-      <a href="district.html">
+      <!-- District Card -->
+      <a href="district.html" class="cardLink">
         <div class="anime-card">
           <img src="theni.jpg" alt="District">
           <h2>District</h2>
         </div>
       </a>
 
-      <!-- Demon Slayer Card (THIRD) -->
-      <a href="demonslayer.html">
+      <!-- Demon Slayer Card -->
+      <a href="demonslayer.html" class="cardLink">
         <div class="anime-card">
           <img src="dmgroup.jpg" alt="Demon Slayer">
           <h2>Demon Slayer</h2>
@@ -187,7 +212,7 @@
       </a>
 
       <!-- Naruto Card -->
-      <a href="narutopage.html">
+      <a href="narutopage.html" class="cardLink">
         <div class="anime-card">
           <img src="naruto2.jpg" alt="Naruto">
           <h2>Naruto</h2>
@@ -195,7 +220,7 @@
       </a>
 
       <!-- Food Card -->
-      <a href="food.html">
+      <a href="food2.html" class="cardLink">
         <div class="anime-card">
           <img src="food.jpg" alt="Food">
           <h2>Food</h2>
@@ -203,7 +228,7 @@
       </a>
 
       <!-- IPL Card -->
-      <a href="ipl.html">
+      <a href="ipl.html" class="cardLink">
         <div class="anime-card">
           <img src="ipl.jpg" alt="IPL Team">
           <h2>IPL Team</h2>
@@ -211,15 +236,15 @@
       </a>
 
       <!-- Cartoon Card -->
-      <a href="cartoon.html">
+      <a href="cartoon.html" class="cardLink">
         <div class="anime-card">
           <img src="ben.jpg" alt="Cartoon">
           <h2>Cartoon</h2>
         </div>
       </a>
 
-      <!-- Heroine Card (LAST) -->
-      <a href="heroine.html">
+      <!-- Heroine Card -->
+      <a href="heroine.html" class="cardLink">
         <div class="anime-card">
           <img src="samantha.jpg" alt="Heroine">
           <h2>Heroine</h2>
@@ -231,8 +256,28 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Genz FanPOll Website | All Rights Reserved</p>
+    <p>© 2026 Genz FanPoll Website | All Rights Reserved</p>
   </footer>
+
+  <!-- SEARCH SCRIPT -->
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".cardLink");
+
+    searchInput.addEventListener("keyup", function () {
+      let filter = searchInput.value.toLowerCase();
+
+      cards.forEach(card => {
+        let text = card.innerText.toLowerCase();
+
+        if (text.includes(filter)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
