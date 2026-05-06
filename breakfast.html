@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breakfast Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: #ff9f1a;
+  text-align: center;
+  padding: 18px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px auto;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 14px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 90%;
+  max-width: 350px;
+  margin: 15px auto;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.search-box {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.search-box input {
+  width: 80%;
+  max-width: 400px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  text-align: center;
+  padding: 15px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ddd;
+}
+
+button {
+  background: #ff9f1a;
+  border: none;
+  padding: 12px;
+  width: 90%;
+  max-width: 200px;
+  font-size: 16px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: red;
+}
+
+.progressBox {
+  width: 95%;
+  height: 18px;
+  background: #333;
+  border-radius: 12px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 12px;
+}
+
+.commentBox {
+  background: #1a1a1a;
+  width: 92%;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.commentBox h2 {
+  font-size: 20px;
+}
+
+input, textarea {
+  width: 95%;
+  padding: 12px;
+  margin: 8px auto;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  display: block;
+}
+
+textarea {
+  height: 80px;
+}
+
+.singleComment {
+  background: #222;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 20px;
+}
+
+#message {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  color: lightgreen;
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue, push, set } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const breakfastItems = [
+    {n:"Idli", d:"Soft and healthy breakfast", c:"#ff4757"},
+    {n:"Dosa", d:"Crispy South Indian dosa", c:"#ffa502"},
+    {n:"Pongal", d:"Hot ven pongal", c:"#2ed573"},
+    {n:"Poori", d:"Poori with potato masala", c:"#1e90ff"},
+    {n:"Upma", d:"Simple and tasty upma", c:"#3742fa"},
+    {n:"Vada", d:"Crispy medu vada", c:"#e84393"},
+    {n:"Appam", d:"Soft appam with stew", c:"#00cec9"},
+    {n:"Paniyaram", d:"Kuzhi paniyaram", c:"#6c5ce7"},
+    {n:"Chapathi", d:"Chapathi with kurma", c:"#fd79a8"},
+    {n:"Parotta", d:"Parotta with salna", c:"#e67e22"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData, totalVotes){
+    let html = "";
+
+    breakfastItems.forEach(x => {
+      const key = safeKey(x.n);
+      const count = votesData?.[key] || 0;
+
+      let percent = 0;
+      if(totalVotes > 0){
+        percent = ((count / totalVotes) * 100).toFixed(1);
+      }
+
+      html += `
+        <div class="card">
+          <h3>${x.n}</h3>
+          <p>${x.d}</p>
+
+          <p>${percent}% (${count} votes)</p>
+
+          <div class="progressBox">
+            <div class="progressFill" style="width:${percent}%; background:${x.c};"></div>
+          </div>
+
+          <button onclick="castVote('${x.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("breakfast").innerHTML = html;
+  }
+
+  let currentVotes = {};
+  let currentTotal = 0;
+
+  onValue(ref(database, "breakfastTotalVotes"), (snapshot) => {
+    currentTotal = snapshot.val() || 0;
+    document.getElementById("totalVotes").innerText = currentTotal;
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  onValue(ref(database, "breakfastVotes"), (snapshot) => {
+    currentVotes = snapshot.val() || {};
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  window.castVote = function(item){
+
+    let hasVoted = localStorage.getItem("breakfastVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(item);
+
+    const itemRef = ref(database, "breakfastVotes/" + key);
+    const overallRef = ref(database, "breakfastTotalVotes");
+
+    runTransaction(itemRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("breakfastVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // COMMENTS
+  function showComments(commentData){
+    let html = "";
+    if(commentData){
+      const commentArray = Object.values(commentData);
+
+      commentArray.reverse().forEach(x => {
+        html += `
+          <div class="singleComment">
+            <b>${x.name}</b>
+            <p>${x.comment}</p>
+          </div>
+        `;
+      });
+    }
+    document.getElementById("commentList").innerHTML = html;
+  }
+
+  onValue(ref(database, "breakfastComments"), (snapshot) => {
+    showComments(snapshot.val());
+  });
+
+  window.addComment = function(){
+    const name = document.getElementById("name").value.trim();
+    const comment = document.getElementById("comment").value.trim();
+
+    if(name === "" || comment === ""){
+      alert("Please enter name and comment!");
+      return;
+    }
+
+    const newCommentRef = push(ref(database, "breakfastComments"));
+
+    set(newCommentRef, {
+      name: name,
+      comment: comment,
+      time: Date.now()
+    });
+
+    document.getElementById("name").value = "";
+    document.getElementById("comment").value = "";
+  };
+</script>
+
+<header>
+  <h1>🍳 Tamil Nadu Breakfast Fan Poll 🍳</h1>
+  <p>Vote your favourite breakfast (Only One Vote Allowed)</p>
+</header>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message"></p>
+
+<!-- SEARCH -->
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Search breakfast item...">
+</div>
+
+<div class="container" id="breakfast"></div>
+
+<div class="commentBox">
+  <h2 style="text-align:center;">💬 Comments</h2>
+
+  <input id="name" placeholder="Name">
+  <textarea id="comment" placeholder="Comment"></textarea>
+  <button onclick="addComment()">Post</button>
+
+  <div id="commentList"></div>
+</div>
+
+<footer>
+<b>Tamil Nadu Breakfast Fan Poll</b> <br><br>
+⚠️ Disclaimer: Fan-made poll website for entertainment only. <br><br>
+Made with ❤️ by FanPoll Creator.
+</footer>
+
+<!-- SEARCH SCRIPT -->
+<script>
+  const searchInput = document.getElementById("searchInput");
+
+  searchInput.addEventListener("keyup", function () {
+    let filter = searchInput.value.toLowerCase();
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+      let text = card.innerText.toLowerCase();
+
+      if (text.includes(filter)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

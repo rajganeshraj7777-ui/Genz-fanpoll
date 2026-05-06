@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Category</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0b0b0b;
+      color: white;
+    }
+
+    header {
+      background-color: black;
+      padding: 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: cyan;
+      font-size: 22px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: white;
+      font-size: 14px;
+    }
+
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: yellow;
+    }
+
+    .container {
+      width: 95%;
+      margin: auto;
+      padding: 15px;
+    }
+
+    /* SEARCH BOX */
+    .search-box {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .search-box input {
+      width: 80%;
+      max-width: 400px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    /* SLIDER STYLE */
+    .food-grid {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 15px 5px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .food-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* CARD DESIGN */
+    .food-card {
+      flex: 0 0 auto;
+      width: 250px;
+      background-color: #111;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      cursor: pointer;
+      scroll-snap-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .food-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,255,255,0.8);
+    }
+
+    .food-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .food-card h2 {
+      text-align: center;
+      padding: 8px;
+      margin: 0;
+      color: orange;
+      font-size: 18px;
+    }
+
+    footer {
+      background-color: black;
+      padding: 15px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 0;
+      color: white;
+      font-size: 14px;
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 600px) {
+      .food-card {
+        width: 180px;
+      }
+
+      .food-card img {
+        height: 120px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      nav a {
+        font-size: 14px;
+        margin: 0 8px;
+      }
+
+      .search-box input {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>🍴 Favourite Food</h1>
+    <p>Select Breakfast, Lunch or Dinner</p>
+  </header>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="food.html">Food</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h2 style="text-align:center; color:cyan;">Choose Food Category</h2>
+    <p style="text-align:center;">Swipe left/right to see cards.</p>
+
+    <!-- SEARCH BOX -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search Breakfast / Lunch / Dinner...">
+    </div>
+
+    <div class="food-grid" id="foodContainer">
+
+      <!-- Breakfast Card -->
+      <a href="breakfast.html" class="foodLink">
+        <div class="food-card">
+          <img src="breakfast.jpg" alt="Breakfast">
+          <h2>Breakfast</h2>
+        </div>
+      </a>
+
+      <!-- Lunch Card -->
+      <a href="lunch.html" class="foodLink">
+        <div class="food-card">
+          <img src="lunch.jpg" alt="Lunch">
+          <h2>Lunch</h2>
+        </div>
+      </a>
+
+      <!-- Dinner Card -->
+      <a href="dinner.html" class="foodLink">
+        <div class="food-card">
+          <img src="dinner.jpg" alt="Dinner">
+          <h2>Dinner</h2>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Genz FanPoll Website | All Rights Reserved</p>
+  </footer>
+
+  <!-- SEARCH SCRIPT -->
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".foodLink");
+
+    searchInput.addEventListener("keyup", function () {
+      let filter = searchInput.value.toLowerCase();
+
+      cards.forEach(card => {
+        let text = card.innerText.toLowerCase();
+
+        if (text.includes(filter)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
