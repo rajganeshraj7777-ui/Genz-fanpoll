@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.R. Rahman Albums Fan Poll</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b0b;
+  color: white;
+}
+
+header {
+  background: #00cec9;
+  text-align: center;
+  padding: 18px;
+  color: black;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.search-box {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.search-box input {
+  width: 85%;
+  max-width: 450px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.warning {
+  text-align: center;
+  background: #222;
+  color: orange;
+  padding: 12px;
+  margin: 15px auto;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 14px;
+}
+
+.totalVotes {
+  text-align: center;
+  background: #222;
+  width: 90%;
+  max-width: 350px;
+  margin: 15px auto;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.aboutHero {
+  background: #1a1a1a;
+  width: 92%;
+  max-width: 800px;
+  margin: 15px auto;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  line-height: 22px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  text-align: center;
+  padding: 15px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #00cec9;
+}
+
+.card p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ddd;
+}
+
+button {
+  background: #00cec9;
+  border: none;
+  padding: 12px;
+  width: 90%;
+  max-width: 200px;
+  font-size: 16px;
+  color: black;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: cyan;
+}
+
+.progressBox {
+  width: 95%;
+  height: 18px;
+  background: #333;
+  border-radius: 12px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 12px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 20px;
+}
+
+#message {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  color: lightgreen;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🔥 A.R. Rahman Albums Fan Poll 🔥</h1>
+  <p>Vote your favourite Rahman Album (Only One Vote Allowed)</p>
+</header>
+
+<div class="aboutHero">
+  🌟 <b>A.R. Rahman</b> is a world-famous music legend.  
+  His albums created history in Tamil cinema and Indian cinema.  
+  He is known as the <b>Isai Puyal</b> and an Oscar winning composer.
+</div>
+
+<div class="warning">
+⚠️ Think carefully before voting. Once you vote, you cannot change it.
+</div>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Search Rahman album...">
+</div>
+
+<div class="totalVotes">
+Total Votes: <span id="totalVotes">0</span>
+</div>
+
+<p id="message"></p>
+
+<div class="container" id="albums"></div>
+
+<footer>
+<b>A.R. Rahman Albums Fan Poll</b> <br><br>
+⚠️ Disclaimer: This is a fan-made website created for entertainment and educational purposes only.  
+All movie names and album rights belong to their respective owners.  
+No copyright infringement intended.
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getDatabase, ref, runTransaction, onValue } 
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB06ctl-yZGH_b0FHaYX0-cHE1JbWksIy8",
+    authDomain: "anime-fanpoll-239e5.firebaseapp.com",
+    projectId: "anime-fanpoll-239e5",
+    storageBucket: "anime-fanpoll-239e5.firebasestorage.app",
+    messagingSenderId: "585188732874",
+    appId: "1:585188732874:web:7de5a33e4baeb6bbc0e933",
+    measurementId: "G-YLY6FQHN1W",
+    databaseURL: "https://anime-fanpoll-239e5-default-rtdb.firebaseio.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // ADD MORE MOVIES HERE
+  const albums = [
+    {n:"Roja", d:"Legendary debut album", c:"#00cec9"},
+    {n:"Bombay", d:"Evergreen masterpiece", c:"#ff4757"},
+    {n:"Kadhalan", d:"Dance hits & mass songs", c:"#ffa502"},
+    {n:"Jeans", d:"Romantic classic album", c:"#1e90ff"},
+    {n:"Minsara Kanavu", d:"Dreamy musical album", c:"#6c5ce7"},
+    {n:"Alaipayuthey", d:"Modern love album", c:"#2ed573"},
+    {n:"Rhythm", d:"Melody gold", c:"#e17055"},
+    {n:"Boys", d:"Youth trend album", c:"#ff6b81"},
+    {n:"Sivaji", d:"Superstar commercial hits", c:"#fdcb6e"},
+    {n:"Enthiran", d:"Sci-fi mass songs", c:"#70a1ff"},
+    {n:"Vinnaithaandi Varuvaayaa", d:"Love emotion album", c:"#ff9f43"},
+    {n:"OK Kanmani", d:"Romantic fresh vibe", c:"#00b894"},
+    {n:"Iruvar", d:"Classical masterpiece", c:"#0984e3"},
+    {n:"Dil Se", d:"Hindi evergreen hits", c:"#d63031"},
+    {n:"Slumdog Millionaire", d:"Oscar winning album", c:"#e84393"}
+  ];
+
+  function safeKey(name){
+    return name.replace(/\s+/g, "_").replace(/[.#$[\]]/g, "");
+  }
+
+  function renderVotes(votesData, totalVotes, filter=""){
+    let html = "";
+
+    albums.forEach(a => {
+      if(!a.n.toLowerCase().includes(filter)) return;
+
+      const key = safeKey(a.n);
+      const count = votesData?.[key] || 0;
+
+      let percent = 0;
+      if(totalVotes > 0){
+        percent = ((count / totalVotes) * 100).toFixed(1);
+      }
+
+      html += `
+        <div class="card">
+          <h3>${a.n}</h3>
+          <p>${a.d}</p>
+
+          <p>${percent}% (${count} votes)</p>
+
+          <div class="progressBox">
+            <div class="progressFill" style="width:${percent}%; background:${a.c};"></div>
+          </div>
+
+          <button onclick="castVote('${a.n}')">Vote</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("albums").innerHTML = html;
+  }
+
+  let currentVotes = {};
+  let currentTotal = 0;
+
+  onValue(ref(database, "rahmanTotalVotes"), (snapshot) => {
+    currentTotal = snapshot.val() || 0;
+    document.getElementById("totalVotes").innerText = currentTotal;
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  onValue(ref(database, "rahmanVotes"), (snapshot) => {
+    currentVotes = snapshot.val() || {};
+    renderVotes(currentVotes, currentTotal);
+  });
+
+  window.castVote = function(album){
+
+    let hasVoted = localStorage.getItem("rahmanVoted");
+
+    if(hasVoted === "true"){
+      document.getElementById("message").innerText = "❌ You already voted!";
+      return;
+    }
+
+    const key = safeKey(album);
+
+    const albumRef = ref(database, "rahmanVotes/" + key);
+    const overallRef = ref(database, "rahmanTotalVotes");
+
+    runTransaction(albumRef, (curr) => (curr || 0) + 1);
+    runTransaction(overallRef, (curr) => (curr || 0) + 1);
+
+    localStorage.setItem("rahmanVoted", "true");
+
+    document.getElementById("message").innerText = "✅ Vote submitted!";
+  };
+
+  // SEARCH
+  document.getElementById("searchInput").addEventListener("keyup", function(){
+    let filter = this.value.toLowerCase();
+    renderVotes(currentVotes, currentTotal, filter);
+  });
+</script>
+
+</body>
+</html>
