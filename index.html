@@ -120,71 +120,6 @@
       font-size: 18px;
     }
 
-    /* COMMENT SECTION (REDUCED SIZE) */
-    .commentBox {
-      background: #1a1a1a;
-      width: 88%;
-      max-width: 450px;
-      margin: 25px auto;
-      padding: 12px;
-      border-radius: 12px;
-    }
-
-    .commentBox h2 {
-      font-size: 18px;
-      text-align: center;
-      color: cyan;
-      margin-bottom: 5px;
-    }
-
-    .commentBox p {
-      text-align: center;
-      font-size: 13px;
-      color: lightgreen;
-      margin-top: 0;
-    }
-
-    input, textarea {
-      width: 92%;
-      padding: 10px;
-      margin: 6px auto;
-      border-radius: 10px;
-      border: none;
-      font-size: 14px;
-      display: block;
-    }
-
-    textarea {
-      height: 65px;
-    }
-
-    .commentBtn {
-      background: cyan;
-      border: none;
-      padding: 10px;
-      width: 80%;
-      max-width: 160px;
-      font-size: 15px;
-      color: black;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 10px auto;
-      display: block;
-    }
-
-    .commentBtn:hover {
-      background: yellow;
-      color: black;
-    }
-
-    .singleComment {
-      background: #222;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
     footer {
       background-color: black;
       padding: 15px;
@@ -220,10 +155,6 @@
       .search-box input {
         width: 90%;
       }
-
-      .commentBox {
-        width: 92%;
-      }
     }
   </style>
 </head>
@@ -253,89 +184,99 @@
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search here...">
     </div>
-    <h2 style="text-align:center; color:cyan; margin-top:20px;">
-   Tamil Actors 
-</h2>
 
+    <!-- TAMIL ACTORS HEADING -->
+    <h2 style="text-align:center; color:cyan; margin-top:20px;">
+      Tamil Actors
+    </h2>
+    <a href="heropage.html">
     <div class="anime-grid" id="cardContainer">
-      <!-- Hero Card -->
-       
-      <a href="heropage.html" class="cardLink">
-        <div class="anime-card">
-          <img src="vi.jpg" alt="Tamil Hero">
+       <div class="anime-card">
+          <img src="vi.jpg" alt="Rajini">
           <h2>Pick one</h2>
         </div>
       </a>
 
-      <!-- District Card -->
-      <a href="rajini.html" class="cardLink">
-        <div class="anime-card">
-          <img src="rajini3.jpg" alt="District">
+     <a href="rajini.html" class="cardLink">
+       <!-- Rajini -->
+       <div class="anime-card">
+          <img src="rajini3.jpg" alt="Rajini">
           <h2>Rajini</h2>
         </div>
       </a>
 
-      <!-- Demon Slayer Card -->
+      <!-- Kamal -->
       <a href="kamal.html" class="cardLink">
         <div class="anime-card">
-          <img src="kamal3.jpg" alt="Demon Slayer">
+          <img src="kamal3.jpg" alt="Kamal">
           <h2>Kamal</h2>
         </div>
       </a>
 
-      <!-- Naruto Card -->
+      <!-- Vijay -->
       <a href="vijay.html" class="cardLink">
         <div class="anime-card">
-          <img src="vijay.jpg" alt="Naruto">
+          <img src="vijay.jpg" alt="Vijay">
           <h2>Vijay</h2>
         </div>
       </a>
 
-      <!-- Food Card -->
+      <!-- Ajith -->
       <a href="ajith.html" class="cardLink">
         <div class="anime-card">
-          <img src="ajith.jpg" alt="Food">
+          <img src="ajith.jpg" alt="Ajith">
           <h2>Ajith</h2>
         </div>
       </a>
 
-      <!-- IPL Card -->
-      <a href="ipl.html" class="cardLink">
+    </div>
+
+    <!-- MUSIC DIRECTORS HEADING -->
+    <h2 style="text-align:center; color:cyan; margin-top:30px;">
+      Music Directors
+    </h2>
+    <div class="anime-grid" id="musicContainer">
+    <a href="music.html" class="cardLink">
         <div class="anime-card">
-          <img src="ipl.jpg" alt="IPL Team">
-          <h2>IPL Team</h2>
+          <img src="spb.jpg" alt="Ilaiyaraaja">
+          <h2>Pick one</h2>
         </div>
       </a>
 
-      <!-- Cartoon Card -->
-      <a href="cartoon.html" class="cardLink">
+      <!-- AR Rahman -->
+      <a href="ar.html" class="cardLink">
         <div class="anime-card">
-          <img src="ben.jpg" alt="Cartoon">
-          <h2>Cartoon</h2>
+          <img src="ar.jpg" alt="AR Rahman">
+          <h2>AR Rahman</h2>
         </div>
       </a>
 
-      <!-- Heroine Card -->
-      <a href="heroine.html" class="cardLink">
+      <!-- Anirudh -->
+      <a href="anirudh.html" class="cardLink">
         <div class="anime-card">
-          <img src="samantha.jpg" alt="Heroine">
-          <h2>Heroine</h2>
+          <img src="aniruth.jpg" alt="Anirudh">
+          <h2>Anirudh</h2>
+        </div>
+      </a>
+
+      <!-- Harris Jayaraj -->
+      <a href="js.html" class="cardLink">
+        <div class="anime-card">
+          <img src="js.jpg" alt="Harris Jayaraj">
+          <h2>Harris Jayaraj</h2>
+        </div>
+      </a>
+
+      <!-- Yuvan -->
+      <a href="yuvan.html" class="cardLink">
+        <div class="anime-card">
+          <img src="yuvan.jpg" alt="Yuvan">
+          <h2>Yuvan</h2>
         </div>
       </a>
 
     </div>
-  </div>
 
-  <!-- COMMENT SECTION -->
-  <div class="commentBox">
-    <h2>💬 Comments</h2>
-    <p>If you want me to add anything else, tell me.</p>
-
-    <input id="name" placeholder="Name">
-    <textarea id="comment" placeholder="Comment"></textarea>
-    <button class="commentBtn" onclick="addComment()">Post</button>
-
-    <div id="commentList"></div>
   </div>
 
   <!-- FOOTER -->
@@ -361,50 +302,6 @@
         }
       });
     });
-
-    // COMMENT SYSTEM (LOCAL STORAGE)
-    function loadComments() {
-      let comments = JSON.parse(localStorage.getItem("homeComments")) || [];
-      let html = "";
-
-      comments.reverse().forEach(c => {
-        html += `
-          <div class="singleComment">
-            <b>${c.name}</b>
-            <p>${c.comment}</p>
-          </div>
-        `;
-      });
-
-      document.getElementById("commentList").innerHTML = html;
-    }
-
-    function addComment() {
-      const name = document.getElementById("name").value.trim();
-      const comment = document.getElementById("comment").value.trim();
-
-      if (name === "" || comment === "") {
-        alert("Please enter name and comment!");
-        return;
-      }
-
-      let comments = JSON.parse(localStorage.getItem("homeComments")) || [];
-
-      comments.push({
-        name: name,
-        comment: comment,
-        time: Date.now()
-      });
-
-      localStorage.setItem("homeComments", JSON.stringify(comments));
-
-      document.getElementById("name").value = "";
-      document.getElementById("comment").value = "";
-
-      loadComments();
-    }
-
-    loadComments();
   </script>
 
 </body>
